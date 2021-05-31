@@ -8,20 +8,20 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 
-class board1{
+class Board{
 public:
-    board1();
-    ~board1();
-    int boardlist1[30][60];
-    void printboard1();
+    Board();
+    ~Board();
+    int boardList[32][64];
+    void printBoard();
 };
 
-class snake{
+class Snake{
 private:
     int x;
     int y;
 public:
-    snake(int headx, int heady){
+    Snake(int headx, int heady){
         x = headx;
         y = heady;
     }

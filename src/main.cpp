@@ -15,26 +15,24 @@ int main(int argc, char *argv[]) {
   init_pair(44,202,202); //orange
 
   wbkgd(stdscr, COLOR_PAIR(16));
-  board1 b1;
-  WINDOW *win = newwin(30,90,0,60);
+  Board b1;
+  WINDOW *win = newwin(30,90,0,64);
   wbkgd(win,COLOR_PAIR(100));
-  b1.printboard1();
 
   //snake not working...>>
-/*
-  list<snake> snake1;
-  list<snake>::iterator it;
-  bool fail =false;
+
+  bool flag =false;
   char dir = 'l';
   char ch;
+  keypad(stdscr, TRUE);
 
-  for (int i =0;i<3;i++){
-    snake1.push_front(snake(45+i,15));
-
-  }
-  
-
-  while(!fail){
+  int headX = 15;
+  int headY = 15;
+  b1.boardList[headX][headY*2] = 3;
+  b1.boardList[headX][(headY+1)*2] = 4;
+  b1.boardList[headX][(headY+2)*2] = 4;
+  b1.printBoard();
+  while(!flag){
     ch = getch();
     switch(ch) {
       case 'a': //left
@@ -50,47 +48,26 @@ int main(int argc, char *argv[]) {
         dir = 'u';
         break;
       default:
-        fail =true;
+        flag =true;
         break;
     }
 
-      snake head = snake1.front();
-    int x = head.getX();
-    int y = head.getY();
-    if (dir == 'l') x--;
-    else if (dir == 'r') x++;
-    else if (dir == 'd') y--;
-    else if (dir == 'u') y++;
+    if (dir == 'l') headY--;
+    else if (dir == 'r') headY++;
+    else if (dir == 'd') headX++;
+    else if (dir == 'u') headX--;
 
-    if (y>29 || y<1 || x>59 || x<1){
-      fail = true;
+    if (b1.boardList[headX][headY*2] != 9){
+      flag = true;
     }
 
 
-    //print snake
-    erase();
-    for (it = snake1.begin(); it!=snake1.end();it++){
-      if (it == snake1.begin()){
-        attron(COLOR_PAIR(33));
-        mvprintw(y,x,"@"); 
-        attroff(COLOR_PAIR(33));
-      }
-      else{
-        attron(COLOR_PAIR(44));
-        mvprintw(y,x,"S"); 
-        attroff(COLOR_PAIR(44));
-      }
-      if (((*it).getX()==x) && ((*it).getY() == y)){  //collision with itself
-        fail = true;
-      }
-    }
+    
 
-    refresh();
     
   }
   
-  erase();
-  */
+  
   refresh();
   wrefresh(win);
   getch();
