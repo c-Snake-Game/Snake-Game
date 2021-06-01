@@ -12,8 +12,6 @@ int kbhit () {  /* checks if key has been hit or not */
   }
 
 Board::Board(){
-  
-  
     for (int i=0; i<32; i++) {
         for (int j=0; j<64; j++) {
             boardList[i][j] = 0;
@@ -39,7 +37,6 @@ Board::Board(){
 }
 
 Board::~Board(){
-  
 }
 
 void Board::printBoard(){
@@ -81,7 +78,8 @@ void Board::printBoard(){
     }
 }
 
-
+Snake::~Snake() {
+}
 
 
 
