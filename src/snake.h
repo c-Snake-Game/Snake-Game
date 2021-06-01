@@ -27,6 +27,7 @@ class Snake{
         int y;
     public:
         Snake(int headx = 0, int heady = 0):x(headx), y(heady){}
+        ~Snake();
         int getX(){return x;}
         int getY(){return y;}
 };
