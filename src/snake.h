@@ -5,8 +5,6 @@
 #include <string>
 #include <unistd.h>
 #include <time.h>
-#include <termios.h>   //kgetch
-#include <term.h>         //kgetch
 
 #ifndef SNAKE_H
 #define SNAKE_H
