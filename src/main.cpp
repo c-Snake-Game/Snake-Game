@@ -25,8 +25,9 @@ int main(int argc, char *argv[]) {
   int dir = 1;   //right
   int ch;
   list<Snake> snake1;
+  list<Snake>::iterator it;
 
-  int sl = 3;   //snake length
+  int sl = 7;   //snake length
   for (int i = 0; i < sl; i++) {
     snake1.push_back(Snake(15,15+i));
   }
@@ -46,7 +47,7 @@ int main(int argc, char *argv[]) {
 
   while(!flag) {   //while start
     usleep(500*1000);
-    if(kbhit()) {
+    if(kbhit()) {  //if(kbhit) start
       ch = getch();
       switch(ch) {
       case 'a': //left
@@ -65,39 +66,6 @@ int main(int argc, char *argv[]) {
         flag = true;
         break;
     }
-  Snake head = snake1.front();
-  int headX = head.getX();
-  int headY = head.getY();
-  if (dir == 1) headY--;
-  else if (dir == 2) headY++;
-  else if (dir == 3) headX++;
-  else if (dir == 4) headX--;
-
-  if (b1.boardList[headX][headY*2] == 1){
-    flag = true;
-    }
-      
-  snake1.push_front(Snake(headX,headY));  //new head
-  Snake temp = snake1.back();
-  b1.boardList[temp.getX()][temp.getY()*2] = 0;
-  snake1.pop_back();
-
-  for (int i = 0; i < sl; i++) {
-    Snake temp = snake1.front();
-    snake1.pop_front();
-    snake1.push_back(temp);
-    if (i == 0) {
-      b1.boardList[temp.getX()][temp.getY()*2] = 3;
-      }
-    else {
-      b1.boardList[temp.getX()][temp.getY()*2] = 4;
-    }
-  }
-  clear();
-  b1.printBoard();
-  refresh();
-  }
-  else {
     Snake head = snake1.front();
     int headX = head.getX();
     int headY = head.getY();
@@ -105,29 +73,72 @@ int main(int argc, char *argv[]) {
     else if (dir == 2) headY++;
     else if (dir == 3) headX++;
     else if (dir == 4) headX--;
-    if (b1.boardList[headX][headY*2] == 1){
+
+    if (b1.boardList[headX][headY*2] == 1){  //collision wall
       flag = true;
-    }
-      
+      }
     snake1.push_front(Snake(headX,headY));  //new head
     Snake temp = snake1.back();
     b1.boardList[temp.getX()][temp.getY()*2] = 0;
     snake1.pop_back();
+
     for (int i = 0; i < sl; i++) {
       Snake temp = snake1.front();
       snake1.pop_front();
       snake1.push_back(temp);
       if (i == 0) {
         b1.boardList[temp.getX()][temp.getY()*2] = 3;
-      }
+        }
       else {
         b1.boardList[temp.getX()][temp.getY()*2] = 4;
       }
     }
+    Snake tempH = snake1.front();
+    for (it = snake1.begin(); it != snake1.end(); it++) {  //collision with itself
+      if ( it != snake1.begin() ) {
+        if ((*it).getX() == tempH.getX() && (*it).getY() == tempH.getY() ) flag = true;
+      }
+    }  
     clear();
     b1.printBoard();
     refresh();
-  }
+    } //if(kbhit) end
+    else { //else start
+      Snake head = snake1.front();
+      int headX = head.getX();
+      int headY = head.getY();
+      if (dir == 1) headY--;
+      else if (dir == 2) headY++;
+      else if (dir == 3) headX++;
+      else if (dir == 4) headX--;
+      if (b1.boardList[headX][headY*2] == 1){
+        flag = true;
+      }
+      snake1.push_front(Snake(headX,headY));  //new head
+      Snake temp = snake1.back();
+      b1.boardList[temp.getX()][temp.getY()*2] = 0;
+      snake1.pop_back();
+      for (int i = 0; i < sl; i++) {
+        Snake temp = snake1.front();
+        snake1.pop_front();
+        snake1.push_back(temp);
+        if (i == 0) {
+          b1.boardList[temp.getX()][temp.getY()*2] = 3;
+        }
+        else {
+          b1.boardList[temp.getX()][temp.getY()*2] = 4;
+        }
+      }
+      Snake tempH = snake1.front();
+      for (it = snake1.begin(); it != snake1.end(); it++) {  //collision with itself
+        if ( it != snake1.begin() ) {
+          if ((*it).getX() == tempH.getX() && (*it).getY() == tempH.getY() ) flag = true;
+      }
+    }
+      clear();
+      b1.printBoard();
+      refresh();
+    }  //else end
   }  //while end
   refresh();
   wrefresh(win);
