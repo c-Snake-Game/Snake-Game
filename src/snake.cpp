@@ -19,6 +19,11 @@ Board::Board(){
     }
     for (int i=0; i<32; i++) {
         for (int j=0; j<64; j++) {
+            itemList[i][j] = 0;
+        }
+    }
+    for (int i=0; i<32; i++) {
+        for (int j=0; j<64; j++) {
             if (i == 0) boardList[i][j] = 9;
             else if (i == 31) boardList[i][j] = 9;
             else if (j == 0 || j == 1 || j == 62 || j==63) boardList[i][j] = 9;
@@ -45,6 +50,8 @@ void Board::printBoard(){
     init_pair(2, COLOR_WHITE,COLOR_WHITE);    // 2 white
     init_pair(3, 11, 11);  // 3 yellow head
     init_pair(4, COLOR_YELLOW, COLOR_YELLOW);  // 4 orange tail
+    init_pair(5, COLOR_GREEN, COLOR_GREEN);  // 5 Growh item green
+    init_pair(6, COLOR_RED, COLOR_RED);  // 6 Poison item red
     for (int x=0; x<32; x++) {
         for (int y=0; y<64; y++) {
             if(y % 2 == 0) {
@@ -73,8 +80,41 @@ void Board::printBoard(){
                     mvprintw(x,y,"aa");
                     attroff(COLOR_PAIR(4));
                 }
+                if (itemList[x][y] == 5) {   //Growth Item
+                    attron(COLOR_PAIR(5));
+                    mvprintw(x,y,"aa");
+                    attroff(COLOR_PAIR(5));
+                }
+                else if (itemList[x][y] == 6) {   //Poison Item
+                    attron(COLOR_PAIR(6));
+                    mvprintw(x,y,"aa");
+                    attroff(COLOR_PAIR(6));
+                }
             }
         }
+    }
+}
+
+void Board::setItem() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dis(10,15);    //2, 29
+    int x = dis(gen);
+    int y = dis(gen);
+    int item = dis(gen);
+    while (true) {  //snake가 있는 곳에는 item생성 x
+        if (boardList[x][y*2] == 3 || boardList[x][y*2] == 4) {
+            x = dis(gen);
+            y = dis(gen);
+            item = dis(gen);
+        }
+        else break;
+    }
+    if (item % 2 == 0) {
+        itemList[x][y*2] = 5;   // Growth Item
+    }
+    else {
+        itemList[x][y*2] = 6;   // Poison Item
     }
 }
 

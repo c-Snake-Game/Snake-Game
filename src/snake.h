@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <string>
 #include <unistd.h>
-#include <time.h>
+#include <ctime>   //setItem
+#include <random>  //setItem
 
 #ifndef SNAKE_H
 #define SNAKE_H
@@ -16,7 +17,9 @@ class Board{
         Board();
         ~Board();
         int boardList[32][64];
+        int itemList[32][64];
         void printBoard();
+        void setItem();
 };
 
 class Snake{
