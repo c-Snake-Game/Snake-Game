@@ -7,6 +7,10 @@ int main(int argc, char *argv[]) {
   curs_set(0);
   
 
+  //speed for each stage
+  int speed1 =300;
+  
+
   start_color();
   init_pair(16,16,16);
   init_pair(100,18,18);
@@ -19,7 +23,7 @@ int main(int argc, char *argv[]) {
   WINDOW *win = newwin(30,90,0,64);
   wbkgd(win,COLOR_PAIR(100));
 
-  //snake not working...>>
+  
 
   bool flag = false;
   int dir = 1;   //right
@@ -27,7 +31,7 @@ int main(int argc, char *argv[]) {
   list<Snake> snake1;
   list<Snake>::iterator it;
 
-  //initialize snake length:10
+  //initialize snake length:3
   for (int i = 0; i < 3; i++) {
     snake1.push_back(Snake(15,15+i));
   }
@@ -47,7 +51,7 @@ int main(int argc, char *argv[]) {
   item_time = time(NULL);
   int item_cnt = 0;
   while(!flag) {   //while start
-    usleep(500*1000);
+    usleep(speed1*1000);
     if(kbhit()) {  //if(kbhit) start
       ch = getch();
       switch(ch) {
@@ -76,29 +80,15 @@ int main(int argc, char *argv[]) {
     else if (dir == 3) headX++;
     else if (dir == 4) headX--;
     
+    
+
     if (b1.boardList[headX][headY*2] == 1){  //collision wall
       flag = true;
     }
-    
-    snake1.push_front(Snake(headX,headY));  //new head
-    b1.boardList[(snake1.back()).getX()][(snake1.back()).getY()*2] = 0; //erase last tail
-    snake1.pop_back(); 
-
-    for (it = snake1.begin(); it !=snake1.end(); it++) { //draw snake1 on the board
-      
-      if (it == snake1.begin()) { //snake head
-        b1.boardList[(*it).getX()][(*it).getY()*2] = 3;
-        }
-      else { //snake tail
-        if ((*it).getX()==headX && (*it).getY() == headY){  //collision with itself
-          flag = true;
-        }
-        b1.boardList[(*it).getX()][(*it).getY()*2] = 4;
-      }
-      
+    if (b1.boardList[headX][headY*2] == 4){  //opposite way
+      flag = true;
     }
-    
-    if (item_time % 5 == 0) {
+    if (item_time % 20 == 0) {
       item_time++;
       for (int i=1; i<30; i++) {
         for (int j=1; j<30; j++) {
@@ -114,16 +104,46 @@ int main(int argc, char *argv[]) {
       item_time++;
     }
 
-    it = snake1.begin();
-    if (b1.itemList[(*it).getX()][(*it).getY()*2] == 5) {
-      b1.itemList[(*it).getX()][(*it).getY()*2] = 0;
-      snake1.push_back(Snake((*it).getX(),(*it).getY()));
+    snake1.push_front(Snake(headX,headY));  //new head (moving forward)
+    
+    
+    if (b1.itemList[headX][headY*2] == 6) { //eating poison item
+      b1.itemList[headX][headY*2] = 0;
+      b1.boardList[(snake1.back()).getX()][(snake1.back()).getY()*2] = 0; //erase last tail*2
+      snake1.pop_back();
+      b1.boardList[(snake1.back()).getX()][(snake1.back()).getY()*2] = 0; 
+      snake1.pop_back();
     }
-    else if (b1.itemList[(*it).getX()][(*it).getY()*2] == 6) {
-      b1.itemList[(*it).getX()][(*it).getY()*2] = 0;
+    else if (b1.itemList[headX][headY*2] == 5) { //eating growth item
+      b1.itemList[headX][headY*2] = 0;
+    }
+    else{  //default moving
       b1.boardList[(snake1.back()).getX()][(snake1.back()).getY()*2] = 0; //erase last tail
       snake1.pop_back();
     }
+
+    
+    if (snake1.size()==0){ //when snake lost all of its body
+      flag = true;
+    }
+
+    for (it = snake1.begin(); it !=snake1.end(); it++) { //draw snake1 on the board
+      
+      if (it == snake1.begin()) { //snake head
+        b1.boardList[(*it).getX()][(*it).getY()*2] = 3;
+        }
+      else { //snake tail
+        if ((*it).getX()==headX && (*it).getY() == headY){  //collision with itself
+          flag = true;
+        }
+        b1.boardList[(*it).getX()][(*it).getY()*2] = 4;
+      }
+      
+    }
+    
+    
+
+    
 
 
 
