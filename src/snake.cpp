@@ -52,6 +52,7 @@ void Board::printBoard(){
     init_pair(4, COLOR_YELLOW, COLOR_YELLOW);  // 4 orange tail
     init_pair(5, COLOR_GREEN, COLOR_GREEN);  // 5 Growh item green
     init_pair(6, COLOR_RED, COLOR_RED);  // 6 Poison item red
+    init_pair(7, COLOR_MAGENTA, COLOR_MAGENTA);  // 7 gate purple
     for (int x=0; x<32; x++) {
         for (int y=0; y<64; y++) {
             if(y % 2 == 0) {
@@ -79,6 +80,11 @@ void Board::printBoard(){
                     attron(COLOR_PAIR(4));
                     mvprintw(x,y,"aa");
                     attroff(COLOR_PAIR(4));
+                }
+                else if (boardList[x][y] == 7) {
+                    attron(COLOR_PAIR(7));
+                    mvprintw(x,y,"aa");
+                    attroff(COLOR_PAIR(7));
                 }
                 if (itemList[x][y] == 5) {   //Growth Item
                     attron(COLOR_PAIR(5));
@@ -116,6 +122,71 @@ void Board::setItem() {
     else {
         itemList[x][y*2] = 6;   // Poison Item
     }
+}
+
+void Board::setGate() {
+    // x = 1~30  y*2 = 2 ~ 29
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dis_0(1,30);    //version
+    std::uniform_int_distribution<int> dis_1(1,30);   //x1,x2
+    std::uniform_int_distribution<int> dis_2(2,29);   // x= 1 , y
+    std::uniform_int_distribution<int> dis_4(1,2);   // x = 2~29 , y
+    std::uniform_int_distribution<int> dis_5(1,2);   // x = 2~29 , y
+    int arrY[] = {0,1,30,0};
+    int x1;
+    int y1;
+    int x2;
+    int y2;
+    int ver = dis_0(gen);
+    if (ver % 2 == 0) {  // x먼저 뽑을경우 맨왼쪽 맨오른쪽 나올 확률이 높음
+        x1 = dis_1(gen);
+        x2 = dis_1(gen);
+        if ( x1 == 1 ) {
+        y1 = dis_2(gen);
+        }
+        else if ( x1 == 30) {
+            y1 = dis_2(gen);
+        }
+        else {
+            y1 = arrY[dis_4(gen)];
+        }
+
+        if ( x2 == 1 ) {
+            y2 = dis_2(gen);
+        }
+        else if ( x2 == 30) {
+            y2 = dis_2(gen);
+        }
+        else {
+            y2 = arrY[dis_5(gen)];
+        }
+    }
+    else {  // y먼저 뽑을경우 맨위 맨아래 나올 확률이 높음
+        y1 = dis_1(gen);
+        y2 = dis_1(gen);
+        if ( y1 == 1 ) {
+        x1 = dis_2(gen);
+        }
+        else if ( y1 == 30 ) {
+            x1 = dis_2(gen);
+        }
+        else {
+            x1 = arrY[dis_4(gen)];
+        }
+
+        if ( y2 == 1 ) {
+            x2 = dis_2(gen);
+        }
+        else if ( y2 == 30 ) {
+            x2 = dis_2(gen);
+        }
+        else {
+            x2 = arrY[dis_5(gen)];
+        }
+    }
+    boardList[x1][y1*2] = 7;
+    boardList[x2][y2*2] = 7;
 }
 
 Snake::~Snake() {

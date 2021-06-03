@@ -20,6 +20,7 @@ class Board{
         int itemList[32][64];
         void printBoard();
         void setItem();
+        void setGate();
 };
 
 class Snake{
