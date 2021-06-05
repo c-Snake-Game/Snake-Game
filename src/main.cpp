@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
   int ch;
   list<Snake> snake1;
   list<Snake>::iterator it;
-
+  
   //initialize snake length:3
   for (int i = 0; i < 3; i++) {
     snake1.push_back(Snake(15,15+i));
@@ -53,6 +53,7 @@ int main(int argc, char *argv[]) {
   gate_time = time(NULL);
   int item_cnt = 0;
   int gate_cnt = 0;
+  int intogate = 0;//for displaying gate while going into the gate
   while(!flag) {   //while start
     usleep(speed1*1000);
     if(kbhit()) {  //if(kbhit) start
@@ -101,7 +102,7 @@ int main(int argc, char *argv[]) {
       b1.setItem();
     }
 
-    if (gate_time % 5 == 0) {   //set gate
+    if (gate_time % 8 == 0) {   //set gate
       gate_time++;
       for (int i=1; i<31; i++) {
         for (int j=1; j<31; j++) {
@@ -123,6 +124,129 @@ int main(int argc, char *argv[]) {
       gate_time++;
     }
 
+    if (intogate !=0){ //if snake is going through a gate 
+      gate_time--;
+      intogate--;
+    }
+
+    ////////////////////////////////////
+    //INTO GATE
+    if (b1.boardList[headX][headY*2]==7){ 
+      gate_time--;
+      intogate = snake1.size();
+      int anotherX, anotherY;
+      if (headX == b1.gateX1 && headY == b1.gateY1){
+        anotherX = b1.gateX2;
+        anotherY = b1.gateY2;
+      }
+      else{
+        anotherX = b1.gateX1;
+        anotherY = b1.gateY1;
+      }
+
+      if (b1.boardList[anotherX-1][anotherY*2]==9){ //gate on the upper wall
+        dir = 3; // down
+        headX = anotherX + 1;
+        headY = anotherY;
+      }
+      else if (b1.boardList[anotherX+1][anotherY*2] == 9){ //gate on the lower wall
+        dir = 4; //up
+        headX = anotherX -1;
+        headY = anotherY;
+      }
+      else if (b1.boardList[anotherX][(anotherY-1)*2] == 9){ //gate on the left wall
+        dir = 2; //right
+        headX = anotherX;
+        headY = anotherY + 1;
+      }
+      else if (b1.boardList[anotherX][(anotherY+1)*2] == 9) { //gate on the right wall
+        dir = 1; //left
+        headX = anotherX;
+        headY = anotherY - 1;
+      }
+
+      //gate not on the sidewall
+      else{ 
+        if (dir == 1){ //original dir = left
+          headX = anotherX;
+          headY = anotherY - 1;
+          if (b1.boardList[anotherX][(anotherY-1)*2]==1){ //when blocked by wall
+            dir = 4; //up
+            headX = anotherX -1;
+            headY = anotherY;
+            if (b1.boardList[anotherX-1][anotherY*2]==1){ //when blocked by wall again
+              dir = 3; //down
+              headX = anotherX+1;
+              headY = anotherY;
+              if (b1.boardList[anotherX+1][anotherY*2]==1){ //blocked again..
+                dir = 2; //right
+                headX = anotherX;
+                headY = anotherY + 1;
+              } 
+            }
+          }
+        }
+        else if (dir == 2) { //original dir =right
+          headX = anotherX;
+          headY = anotherY + 1;
+          if (b1.boardList[anotherX][(anotherY+1)*2]==1){ //when blocked by wall
+            dir = 3; //down
+            headX = anotherX + 1;
+            headY = anotherY;
+            if (b1.boardList[anotherX+1][anotherY*2]==1){ //when blocked by wall again
+              dir = 4; //up
+              headX = anotherX-1;
+              headY = anotherY;
+              if (b1.boardList[anotherX-1][anotherY*2]==1){ //blocked again..
+                dir = 1; //left
+                headX = anotherX;
+                headY = anotherY - 1;
+              } 
+            }
+          }
+        }
+        else if (dir == 3) { //original dir = down
+          headX = anotherX + 1; 
+          headY = anotherY;
+          if (b1.boardList[anotherX + 1][(anotherY)*2]==1){ //when blocked by wall
+            dir = 1; //left
+            headX = anotherX;
+            headY = anotherY-1;
+            if (b1.boardList[anotherX][(anotherY-1)*2]==1){ //when blocked by wall again
+              dir = 2; //right
+              headX = anotherX;
+              headY = anotherY+1;
+              if (b1.boardList[anotherX][(anotherY+1)*2]==1){ //blocked again..
+                dir = 4; //up
+                headX = anotherX-1;
+                headY = anotherY;
+              } 
+            }
+          }
+        }
+        else if (dir == 4) { //original dir =up
+          headX = anotherX-1;
+          headY = anotherY;
+          if (b1.boardList[anotherX-1][(anotherY)*2]==1){ //when blocked by wall
+            dir = 2; //right
+            headX = anotherX;
+            headY = anotherY+1;
+            if (b1.boardList[anotherX][(anotherY+1)*2]==1){ //when blocked by wall again
+              dir = 1; //left
+              headX = anotherX;
+              headY = anotherY-1;
+              if (b1.boardList[anotherX][(anotherY-1)*2]==1){ //blocked again..
+                dir = 3; //down
+                headX = anotherX+1;
+                headY = anotherY;
+              } 
+            }
+          }
+        }
+      }
+
+    }
+    /////////////////////////////////
     snake1.push_front(Snake(headX,headY));  //new head (moving forward)
     
     
@@ -140,13 +264,18 @@ int main(int argc, char *argv[]) {
       b1.boardList[(snake1.back()).getX()][(snake1.back()).getY()*2] = 0; //erase last tail
       snake1.pop_back();
     }
+    
+  
+    
+
 
     
     if (snake1.size()==0){ //when snake lost all of its body
       flag = true;
     }
 
-    for (it = snake1.begin(); it !=snake1.end(); it++) { //draw snake1 on the board
+    //draw snake1 on the board
+    for (it = snake1.begin(); it !=snake1.end(); it++) { 
       
       if (it == snake1.begin()) { //snake head
         b1.boardList[(*it).getX()][(*it).getY()*2] = 3;

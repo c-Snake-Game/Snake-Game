@@ -21,6 +21,8 @@ class Board{
         void printBoard();
         void setItem();
         void setGate();
+        int gateX1,gateY1;
+        int gateX2,gateY2;
 };
 
 class Snake{

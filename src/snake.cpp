@@ -52,7 +52,7 @@ void Board::printBoard(){
     init_pair(4, COLOR_YELLOW, COLOR_YELLOW);  // 4 orange tail
     init_pair(5, COLOR_GREEN, COLOR_GREEN);  // 5 Growh item green
     init_pair(6, COLOR_RED, COLOR_RED);  // 6 Poison item red
-    init_pair(7, COLOR_MAGENTA, COLOR_MAGENTA);  // 7 gate purple
+    init_pair(7, 90, 90);  // 7 gate purple
     for (int x=0; x<32; x++) {
         for (int y=0; y<64; y++) {
             if(y % 2 == 0) {
@@ -104,7 +104,7 @@ void Board::printBoard(){
 void Board::setItem() {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dis(2,29);    //2, 29
+    std::uniform_int_distribution<int> dis(3,28);    //2, 29
     int x = dis(gen);
     int y = dis(gen);
     int item = dis(gen);
@@ -185,6 +185,8 @@ void Board::setGate() {
             x2 = arrY[dis_5(gen)];
         }
     }
+    gateX1=x1; gateY1 = y1;
+    gateX2=x2; gateY2 = y2; 
     boardList[x1][y1*2] = 7;
     boardList[x2][y2*2] = 7;
 }
