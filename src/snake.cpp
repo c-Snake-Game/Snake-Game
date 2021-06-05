@@ -1,4 +1,5 @@
 #include "snake.h"
+using namespace std;
 int kbhit () {  /* checks if key has been hit or not */  
     struct timeval tv;
     fd_set read_fd;
@@ -126,65 +127,48 @@ void Board::setItem() {
 
 void Board::setGate() {
     // x = 1~30  y*2 = 2 ~ 29
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dis_0(1,30);    //version
-    std::uniform_int_distribution<int> dis_1(1,30);   //x1,x2
-    std::uniform_int_distribution<int> dis_2(2,29);   // x= 1 , y
-    std::uniform_int_distribution<int> dis_4(1,2);   // x = 2~29 , y
-    std::uniform_int_distribution<int> dis_5(1,2);   // x = 2~29 , y
-    int arrY[] = {0,1,30,0};
     int x1;
     int y1;
     int x2;
     int y2;
-    int ver = dis_0(gen);
-    if (ver % 2 == 0) {  // x먼저 뽑을경우 맨왼쪽 맨오른쪽 나올 확률이 높음
-        x1 = dis_1(gen);
-        x2 = dis_1(gen);
-        if ( x1 == 1 ) {
-        y1 = dis_2(gen);
-        }
-        else if ( x1 == 30) {
-            y1 = dis_2(gen);
-        }
-        else {
-            y1 = arrY[dis_4(gen)];
-        }
 
-        if ( x2 == 1 ) {
-            y2 = dis_2(gen);
-        }
-        else if ( x2 == 30) {
-            y2 = dis_2(gen);
-        }
-        else {
-            y2 = arrY[dis_5(gen)];
+    pair<int,int> xy;
+    list<pair<int,int>> pairList;
+    for (int i=0; i<32; i++) {
+        for (int j=0; j<64; j++) {
+            if ( boardList[i][j] == 1 ) {
+                xy.first = i;
+                xy.second = j/2;
+                pairList.push_back(xy);
+            }
         }
     }
-    else {  // y먼저 뽑을경우 맨위 맨아래 나올 확률이 높음
-        y1 = dis_1(gen);
-        y2 = dis_1(gen);
-        if ( y1 == 1 ) {
-        x1 = dis_2(gen);
-        }
-        else if ( y1 == 30 ) {
-            x1 = dis_2(gen);
-        }
-        else {
-            x1 = arrY[dis_4(gen)];
-        }
 
-        if ( y2 == 1 ) {
-            x2 = dis_2(gen);
-        }
-        else if ( y2 == 30 ) {
-            x2 = dis_2(gen);
-        }
-        else {
-            x2 = arrY[dis_5(gen)];
-        }
+    int size = pairList.size();
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dis(0,size-1);    //version
+    int ranNum_1 = dis(gen);
+    int ranNum_2 = dis(gen);
+    
+    for ( int i=0; i<ranNum_1; i++ ) {
+        xy = pairList.front();
+        pairList.pop_front();
+        pairList.push_back(xy);    
     }
+    xy = pairList.front();
+    x1 = xy.first;
+    y1 = xy.second;
+    
+    for ( int i=0; i<ranNum_2; i++ ) {
+        xy = pairList.front();
+        pairList.pop_front();
+        pairList.push_back(xy);    
+    }
+    xy = pairList.front();
+    x2 = xy.first;
+    y2 = xy.second;
+    
     gateX1=x1; gateY1 = y1;
     gateX2=x2; gateY2 = y2; 
     boardList[x1][y1*2] = 7;

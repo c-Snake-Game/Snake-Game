@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ncurses.h>
 #include <list>
+#include <utility>
 #include <stdlib.h>
 #include <string>
 #include <unistd.h>
