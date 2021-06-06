@@ -103,20 +103,34 @@ void Board::printBoard(){
 }
 
 void Board::setItem() {
+    pair<int,int> xy;
+    list<pair<int,int>> pairList;
+    for (int i=2; i<29; i++) {
+        for (int j=2; j<59; j++) {
+            if ( boardList[i][j] == 0) {
+                xy.first = i;
+                xy.second = j/2;
+                pairList.push_back(xy);
+            }
+        }
+    }
+    int size = pairList.size();
+
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dis(3,28);    //2, 29
-    int x = dis(gen);
-    int y = dis(gen);
+    std::uniform_int_distribution<int> dis(0,size-1);
+    int ranNum = dis(gen);
     int item = dis(gen);
-    while (true) {  //snake가 있는 곳에는 item생성 x
-        if (boardList[x][y*2] == 3 || boardList[x][y*2] == 4) {
-            x = dis(gen);
-            y = dis(gen);
-            item = dis(gen);
-        }
-        else break;
+    int x = 0;
+    int y = 0;
+    for ( int i=0; i<ranNum; i++ ) {
+        xy = pairList.front();
+        pairList.pop_front();
+        pairList.push_back(xy);    
     }
+    xy = pairList.front();
+    x = xy.first;
+    y = xy.second;
     if (item % 2 == 0) {
         itemList[x][y*2] = 5;   // Growth Item
     }
@@ -147,7 +161,7 @@ void Board::setGate() {
     int size = pairList.size();
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dis(0,size-1);    //version
+    std::uniform_int_distribution<int> dis(0,size-1);   
     int ranNum_1 = dis(gen);
     int ranNum_2 = dis(gen);
     
