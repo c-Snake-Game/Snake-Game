@@ -92,42 +92,6 @@ int main(int argc, char *argv[]) {
     if (b1.boardList[headX][headY*2] == 4){  //opposite way
       flag = true;
     }
-    if (item_time % 5 == 0) {   //set item
-      item_time++;
-      for (int i=2; i<30; i++) {
-        for (int j=2; j<30; j++) {
-          if (b1.itemList[i][j*2] == 5 || b1.itemList[i][j*2] == 6) b1.itemList[i][j*2] = 0;
-        }
-      }
-      b1.setItem();
-    }
-
-    if (gate_time % 8 == 0) {   //set gate
-      gate_time++;
-      for (int i=1; i<31; i++) {
-        for (int j=1; j<31; j++) {
-          if (b1.boardList[i][j*2] == 7) b1.boardList[i][j*2] = 1;
-        }
-      }
-      b1.setGate();
-    }
-
-    item_cnt++;  //item이 2개씩 떨어지는거 방지
-    if (item_cnt == 2) {
-      item_cnt = 0;
-      item_time++;
-    }
-
-    gate_cnt++;  //gate가 4개씩 생기는거 방지
-    if (gate_cnt == 2) {
-      gate_cnt = 0;
-      gate_time++;
-    }
-
-    if (intogate !=0){ //if snake is going through a gate 
-      gate_time--;
-      intogate--;
-    }
 
     ////////////////////////////////////
     //INTO GATE
@@ -247,7 +211,48 @@ int main(int argc, char *argv[]) {
 
     }
     /////////////////////////////////
+    if (item_time % 5 == 0) {   //set item
+      item_time++;
+      for (int i=2; i<30; i++) {
+        for (int j=2; j<30; j++) {
+          if (b1.itemList[i][j*2] == 5 || b1.itemList[i][j*2] == 6) {
+            b1.itemList[i][j*2] = 0;
+            b1.boardList[i][j*2] = 0;
+          }
+        }
+      }
+      b1.setItem();
+    }
+
+    if (gate_time % 15 == 0) {   //set gate
+      gate_time++;
+      for (int i=1; i<31; i++) {
+        for (int j=1; j<31; j++) {
+          if (b1.boardList[i][j*2] == 7) b1.boardList[i][j*2] = 1;
+        }
+      }
+      b1.setGate();
+    }
+
+    item_cnt++;  //item이 2개씩 떨어지는거 방지
+    if (item_cnt == 2) {
+      item_cnt = 0;
+      item_time++;
+    }
+
+    gate_cnt++;  //gate가 4개씩 생기는거 방지
+    if (gate_cnt == 2) {
+      gate_cnt = 0;
+      gate_time++;
+    }
+
+    if (intogate !=0){ //if snake is going through a gate 
+      gate_time--;
+      intogate--;
+    }
+
     snake1.push_front(Snake(headX,headY));  //new head (moving forward)
+    
     
     
     if (b1.itemList[headX][headY*2] == 6) { //eating poison item

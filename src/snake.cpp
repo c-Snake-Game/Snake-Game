@@ -1,5 +1,9 @@
 #include "snake.h"
 using namespace std;
+
+random_device rd;
+mt19937 gen(rd());
+
 int kbhit () {  /* checks if key has been hit or not */  
     struct timeval tv;
     fd_set read_fd;
@@ -106,19 +110,17 @@ void Board::setItem() {
     pair<int,int> xy;
     list<pair<int,int>> pairList;
     for (int i=2; i<29; i++) {
-        for (int j=2; j<59; j++) {
-            if ( boardList[i][j] == 0) {
-                xy.first = i;
-                xy.second = j/2;
-                pairList.push_back(xy);
-            }
+        for (int j=2; j<29; j++) {
+                if ( boardList[i][j*2] == 0) {
+                    xy.first = i;
+                    xy.second = j;
+                    pairList.push_back(xy);
+                }
         }
     }
     int size = pairList.size();
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dis(0,size-1);
+    uniform_int_distribution<int> dis(0,size-1);
     int ranNum = dis(gen);
     int item = dis(gen);
     int x = 0;
@@ -149,19 +151,17 @@ void Board::setGate() {
     pair<int,int> xy;
     list<pair<int,int>> pairList;
     for (int i=0; i<32; i++) {
-        for (int j=0; j<64; j++) {
-            if ( boardList[i][j] == 1 ) {
+        for (int j=0; j<32; j++) {
+            if ( boardList[i][j*2] == 1 ) {
                 xy.first = i;
-                xy.second = j/2;
+                xy.second = j;
                 pairList.push_back(xy);
             }
         }
     }
 
     int size = pairList.size();
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dis(0,size-1);   
+    uniform_int_distribution<int> dis(0,size-1);   
     int ranNum_1 = dis(gen);
     int ranNum_2 = dis(gen);
     
@@ -173,7 +173,8 @@ void Board::setGate() {
     xy = pairList.front();
     x1 = xy.first;
     y1 = xy.second;
-    
+    pairList.pop_front();
+
     for ( int i=0; i<ranNum_2; i++ ) {
         xy = pairList.front();
         pairList.pop_front();
