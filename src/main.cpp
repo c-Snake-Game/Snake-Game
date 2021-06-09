@@ -5,11 +5,9 @@ int main(int argc, char *argv[]) {
   initscr();
   noecho();
   curs_set(0);
-  
 
   //speed for each stage
-  int speed1 =300;
-  
+  int speed1 =300;  
 
   start_color();
   init_pair(16,16,16);
@@ -22,8 +20,6 @@ int main(int argc, char *argv[]) {
   Board b1;
   WINDOW *win = newwin(30,90,0,64);
   wbkgd(win,COLOR_PAIR(100));
-
-  
 
   bool flag = false;
   int dir = 1;   //right
@@ -54,6 +50,7 @@ int main(int argc, char *argv[]) {
   int item_cnt = 0;
   int gate_cnt = 0;
   int intogate = 0;//for displaying gate while going into the gate
+  
   while(!flag) {   //while start
     usleep(speed1*1000);
     if(kbhit()) {  //if(kbhit) start
@@ -211,7 +208,7 @@ int main(int argc, char *argv[]) {
 
     }
     /////////////////////////////////
-    if (item_time % 5 == 0) {   //set item
+    if (item_time % 16 == 0) {   //set item
       item_time++;
       for (int i=2; i<30; i++) {
         for (int j=2; j<30; j++) {
@@ -269,16 +266,15 @@ int main(int argc, char *argv[]) {
       b1.boardList[(snake1.back()).getX()][(snake1.back()).getY()*2] = 0; //erase last tail
       snake1.pop_back();
     }
-    
-  
-    
-
 
     
-    if (snake1.size()==0){ //when snake lost all of its body
+    if (snake1.size() == 2){ //when snake size < 3 
       flag = true;
     }
 
+    if (snake1.size() == 4) {   //change stage
+      b1.changeBoard(b1.stage_1);
+    }
     //draw snake1 on the board
     for (it = snake1.begin(); it !=snake1.end(); it++) { 
       

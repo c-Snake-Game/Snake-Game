@@ -20,28 +20,48 @@ Board::Board(){
     for (int i=0; i<32; i++) {
         for (int j=0; j<64; j++) {
             boardList[i][j] = 0;
-        }
-    }
-    for (int i=0; i<32; i++) {
-        for (int j=0; j<64; j++) {
             itemList[i][j] = 0;
+            stage_1[i][j] = 0;
         }
     }
+
     for (int i=0; i<32; i++) {
         for (int j=0; j<64; j++) {
-            if (i == 0) boardList[i][j] = 9;
-            else if (i == 31) boardList[i][j] = 9;
-            else if (j == 0 || j == 1 || j == 62 || j==63) boardList[i][j] = 9;
+            if (i == 0) { 
+                boardList[i][j] = 9;
+                stage_1[i][j] = 9;
+            }
+            else if (i == 31) { 
+                boardList[i][j] = 9;
+                stage_1[i][j] = 9;
+            }
+            else if (j == 0 || j == 1 || j == 62 || j==63) {
+                boardList[i][j] = 9;
+                stage_1[i][j] = 9;
+            }
             else if (j == 2 || j == 60) {
-                if (i == 1 || i == 30) boardList[i][j] = 2;
-                else boardList[i][j] = 1;
+                if (i == 1 || i == 30) { 
+                    boardList[i][j] = 2;
+                    stage_1[i][j] = 2;
+                }
+                else { 
+                    boardList[i][j] = 1;
+                    stage_1[i][j] = 1;
+                }
             }
             else if (i == 1 || i == 30) {
                 if ( j>= 2 && j<= 61) {
-                    if(j % 2 == 0) boardList[i][j] = 1;
+                    if(j % 2 == 0) { 
+                        boardList[i][j] = 1;
+                        stage_1[i][j] = 1;
+                    }
                 }
             }
         }
+    }
+
+    for (int i = 10; i < 22; i++) {
+        stage_1[5][i*2] = 1;
     }
   
 }
@@ -188,6 +208,14 @@ void Board::setGate() {
     gateX2=x2; gateY2 = y2; 
     boardList[x1][y1*2] = 7;
     boardList[x2][y2*2] = 7;
+}
+
+void Board::changeBoard(int arr[32][64]) {
+    for (int i=0; i<32; i++) {
+        for (int j=0; j<64; j++) {
+            boardList[i][j] = arr[i][j];
+        }
+    }
 }
 
 Snake::~Snake() {
