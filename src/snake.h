@@ -23,6 +23,7 @@ class Board{
         int stage_2[32][64];
         int stage_3[32][64];
         void printBoard();
+        void printPlay();
         void setItem();
         void setSpecial();
         void setGate();

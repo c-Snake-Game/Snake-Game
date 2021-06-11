@@ -97,6 +97,8 @@ Board::Board(){
     for (int i=0; i<8; i++) {
         stage_2[i+22][48] = 1;
     }
+    stage_2[1][16]=2;
+    stage_2[30][48]=2;
     
     //stage2 board setting end
     //stage3 board setting
@@ -130,6 +132,7 @@ Board::Board(){
     for (int i=0; i<8; i++) {
         stage_3[26-i][54] = 1;
     }
+    stage_3[16][32] = 2;
 }
 
 Board::~Board(){
@@ -316,7 +319,39 @@ void Board::changeBoard(int arr[32][64]) {
         }
     }
 }
+void Board::printPlay(){
+    for (int i=68;i<92;i++){
+        attron(COLOR_PAIR(21));
+        mvprintw(29,i,"*");
+        attroff(COLOR_PAIR(21));
+    }
+    for (int i=3; i<29;i++){
+        attron(COLOR_PAIR(21));
+        mvprintw(i,67,"$");
+        mvprintw(i,92,"$");
+        attroff(COLOR_PAIR(21));
+    }
+    attron(COLOR_PAIR(5));
+    mvprintw(20,70,"aa");
+    attroff(COLOR_PAIR(5));
+    attron(COLOR_PAIR(26));
+    mvprintw(20,73," -> Growth Item   ");
+    attroff(COLOR_PAIR(26));
+    attron(COLOR_PAIR(6));
+    mvprintw(21,70,"aa");
+    attroff(COLOR_PAIR(6));
+    attron(COLOR_PAIR(27));
+    mvprintw(21,73," -> Poison Item   ");
+    attroff(COLOR_PAIR(27));
 
+    attron(COLOR_PAIR(28));
+    mvprintw(23,70," moving key :");
+    mvprintw(24,70,"      ___");
+    mvprintw(25,70,"  ___|_w_|___");
+    mvprintw(26,70," |_a_|_s_|_d_|");
+    attroff(COLOR_PAIR(28));
+    
+}
 Snake::~Snake() {
 }
 

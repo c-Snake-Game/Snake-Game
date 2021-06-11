@@ -7,21 +7,26 @@ int main(int argc, char *argv[]) {
   curs_set(0);
   start_color();
   init_pair(16,16,16);
-  init_pair(100,18,18);
-  init_pair(33,226,226); //yellow
-  init_pair(44,202,202); //orange
+  
+  init_pair(21,COLOR_WHITE,16);//white letter
+  init_pair(22,COLOR_YELLOW,16);//yellow letter
+  init_pair(23,90,16);//purple letter
+  init_pair(24,COLOR_YELLOW,234);
+  init_pair(25,90,234);
+  init_pair(26,COLOR_GREEN,16);//green
+  init_pair(27,COLOR_RED,16);//purple
+  init_pair(28,11,16);//light yellow
+  
   wbkgd(stdscr, COLOR_PAIR(16));
   Board b1;
-  WINDOW *win = newwin(30,90,0,64);
-  wbkgd(win,COLOR_PAIR(100));
-
+  
   bool flag = false;
   bool flag_special = false;
   int dir = 1;   //right
   int ch;
   list<Snake> snake1;
   list<Snake>::iterator it;
-  
+  int success = false;
   //initialize snake length:3
   for (int i = 0; i < 3; i++) {
     snake1.push_back(Snake(15,15+i));
@@ -57,6 +62,7 @@ int main(int argc, char *argv[]) {
   int temp_time = 0;
   bool set_lock = false;
   while(!flag) {   //while start
+
     control_time = time(NULL);
     if (control_time == temp_time) {
       set_lock = true;
@@ -104,7 +110,7 @@ int main(int argc, char *argv[]) {
     ////////////////////////////////////
     //INTO GATE
     if (b1.boardList[headX][headY*2]==7){ 
-      gate_cnt++;
+      
       intogate = snake1.size();
       int anotherX, anotherY;
       if (headX == b1.gateX1 && headY == b1.gateY1){
@@ -235,6 +241,9 @@ int main(int argc, char *argv[]) {
 
     if (intogate !=0){ //if snake is going through a gate 
       intogate--;
+      if (intogate == 1){
+        gate_cnt++;
+      }
     }
 
     if (((control_time - start_time) % 15 == 0)&&(!intogate)&&(control_time-start_time>=20)) {   //set gate
@@ -267,7 +276,10 @@ int main(int argc, char *argv[]) {
 
     snake1.push_front(Snake(headX,headY));  //new head (moving forward)
     
-    
+    if (b1.itemList[headX][headY*2] == 8){
+      success = true;
+      flag =true;
+    }
     
     if (b1.itemList[headX][headY*2] == 6) { //eating poison item
       b1.itemList[headX][headY*2] = 0;
@@ -369,15 +381,75 @@ int main(int argc, char *argv[]) {
     
 
     
-
-
-
     clear();
+    
     b1.printBoard();
+    //play board
+    if(!changeBoard_3){
+      attron(COLOR_PAIR(21));
+      mvprintw(3,68,"*******LAST STAGE*******");
+      mvprintw(6,69,"   **YOUR MISSION**   ");
+      attroff(COLOR_PAIR(21));
+      attron(COLOR_PAIR(8));
+      mvprintw(8,70,"-GET THE SPECIAL ITEM ");
+      attroff(COLOR_PAIR(8));
+    }
+    else if (!changeBoard_2){
+      attron(COLOR_PAIR(21));
+      mvprintw(3,68,"*******3rd  STAGE*******");
+      mvprintw(6,69,"   **YOUR MISSION**   ");
+      attroff(COLOR_PAIR(21));
+      attron(COLOR_PAIR(22));
+      mvprintw(8,70,"-Snake length > 9     ");
+      attroff(COLOR_PAIR(22));
+      attron(COLOR_PAIR(23));
+      mvprintw(9,70,"-Passing gate 2 times ");
+      attroff(COLOR_PAIR(23));
+    }
+    else if(!changeBoard_1){
+      attron(COLOR_PAIR(21));
+      mvprintw(3,68,"*******2nd  STAGE*******");
+      mvprintw(6,69,"   **YOUR MISSION**   ");
+      attroff(COLOR_PAIR(21));
+      attron(COLOR_PAIR(22));
+      mvprintw(8,70,"-Snake length > 7     ");
+      attroff(COLOR_PAIR(22));
+      attron(COLOR_PAIR(23));
+      mvprintw(9,70,"-Passing gate 1 time  ");
+      attroff(COLOR_PAIR(23));
+    }
+    else {
+      attron(COLOR_PAIR(21));
+      mvprintw(3,68,"*******1st  STAGE*******");
+      mvprintw(6,69,"   **YOUR MISSION**   ");
+      attroff(COLOR_PAIR(21));
+      attron(COLOR_PAIR(22));
+      mvprintw(8,70,"-Snake length > 5     ");
+      attroff(COLOR_PAIR(22));
+    }
+    attron(COLOR_PAIR(24));
+    mvprintw(13,70," Current length: %d   ", snake1.size());
+    attroff(COLOR_PAIR(24));
+    attron(COLOR_PAIR(25));
+    mvprintw(14,70," Passed gate   : %d   ", gate_cnt);
+    attroff(COLOR_PAIR(25));
+    b1.printPlay();
     refresh();
   }  //while end
+  clear();
+  attron(COLOR_PAIR(21));
+  if (success){
+    mvprintw(10,20,"*******CONGRATULATIAON*******");
+    mvprintw(13,20,"        **YOU WIN!!!**   ");
+  }
+  else {
+    mvprintw(10,20,"*******   YOU FAILED  *******");
+    mvprintw(13,20,"        **TRY AGAIN**   ");
+  }
+  
+  attroff(COLOR_PAIR(21));
   refresh();
-  wrefresh(win);
+  sleep(3);
   endwin();
   return 0;
   }
