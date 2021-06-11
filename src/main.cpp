@@ -273,7 +273,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (snake1.size() == 4) {   //change stage
-      b1.changeBoard(b1.stage_1);
+      b1.changeBoard(b1.stage_3);
     }
     //draw snake1 on the board
     for (it = snake1.begin(); it !=snake1.end(); it++) { 

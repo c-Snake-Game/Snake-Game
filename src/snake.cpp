@@ -22,6 +22,8 @@ Board::Board(){
             boardList[i][j] = 0;
             itemList[i][j] = 0;
             stage_1[i][j] = 0;
+            stage_2[i][j] = 0;
+            stage_3[i][j] = 0;
         }
     }
 
@@ -30,23 +32,33 @@ Board::Board(){
             if (i == 0) { 
                 boardList[i][j] = 9;
                 stage_1[i][j] = 9;
+                stage_2[i][j] = 9;
+                stage_3[i][j] = 9;
             }
             else if (i == 31) { 
                 boardList[i][j] = 9;
                 stage_1[i][j] = 9;
+                stage_2[i][j] = 9;
+                stage_3[i][j] = 9;
             }
             else if (j == 0 || j == 1 || j == 62 || j==63) {
                 boardList[i][j] = 9;
                 stage_1[i][j] = 9;
+                stage_2[i][j] = 9;
+                stage_3[i][j] = 9;
             }
             else if (j == 2 || j == 60) {
                 if (i == 1 || i == 30) { 
                     boardList[i][j] = 2;
                     stage_1[i][j] = 2;
+                    stage_2[i][j] = 2;
+                    stage_3[i][j] = 2;
                 }
                 else { 
                     boardList[i][j] = 1;
                     stage_1[i][j] = 1;
+                    stage_2[i][j] = 1;
+                    stage_3[i][j] = 1;
                 }
             }
             else if (i == 1 || i == 30) {
@@ -54,16 +66,69 @@ Board::Board(){
                     if(j % 2 == 0) { 
                         boardList[i][j] = 1;
                         stage_1[i][j] = 1;
+                        stage_2[i][j] = 1;
+                        stage_3[i][j] = 1;
                     }
                 }
             }
         }
     }
-
-    for (int i = 10; i < 22; i++) {
+    //stage1 board setting 
+    for (int i = 10; i < 22; i++) {    
         stage_1[5][i*2] = 1;
     }
-  
+    for (int i= 10; i < 22; i++) {
+        stage_1[25][i*2] = 1;
+    }
+    for (int i=1; i<6; i++) {
+        stage_1[5+i][24] = 1;
+    }
+    for (int i=1; i<6; i++) {
+        stage_1[25-i][19*2] = 1;
+    }   
+    //stage1 board setting end
+    //stage2 board setting
+    for (int i=0; i<8; i++) {
+        stage_2[i+1][16] = 1;
+    }
+    for (int i=0; i<8; i++) {
+        stage_2[i+11][32] = 1;
+    }
+    for (int i=0; i<8; i++) {
+        stage_2[i+22][48] = 1;
+    }
+    //stage2 board setting end
+    //stage3 board setting
+    for (int i=0; i<9; i++) {
+        stage_3[16][24+(i*2)] = 1;
+    }
+    for (int i=0; i<9; i++) {
+        stage_3[12+i][32] = 1;
+    }
+    for (int i=0; i<10; i++) {
+        stage_3[4][8+(i*2)] =1;
+    }
+    for (int i=0; i<10; i++) {
+        stage_3[4][54-(i*2)] =1;
+    }
+    for (int i=0; i<10; i++) {
+        stage_3[27][8+(i*2)] =1;
+    }
+    for (int i=0; i<10; i++) {
+        stage_3[27][54-(i*2)] =1;
+    }
+    for (int i=0; i<8; i++) {
+        stage_3[5+i][8] = 1;
+    }
+    for (int i=0; i<8; i++) {
+        stage_3[5+i][54] = 1;
+    }
+    for (int i=0; i<8; i++) {
+        stage_3[26-i][8] = 1;
+    }
+    for (int i=0; i<8; i++) {
+        stage_3[26-i][54] = 1;
+    }
 }
 
 Board::~Board(){

@@ -20,6 +20,8 @@ class Board{
         int boardList[32][64];
         int itemList[32][64];
         int stage_1[32][64];
+        int stage_2[32][64];
+        int stage_3[32][64];
         void printBoard();
         void setItem();
         void setGate();
