@@ -97,6 +97,7 @@ Board::Board(){
     for (int i=0; i<8; i++) {
         stage_2[i+22][48] = 1;
     }
+    
     //stage2 board setting end
     //stage3 board setting
     for (int i=0; i<9; i++) {

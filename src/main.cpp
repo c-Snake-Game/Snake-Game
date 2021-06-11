@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
       set_lock = false;
     }
     temp_time = control_time; 
-    usleep(speedArr[2]*1000);
+    usleep(speedArr[0]*1000);
     if(kbhit()) {  //if(kbhit) start
       ch = getch();
       switch(ch) {
@@ -228,7 +228,11 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    if (((control_time - start_time) % 15 == 0)) {   //set gate
+    if (intogate !=0){ //if snake is going through a gate 
+      intogate--;
+    }
+
+    if (((control_time - start_time) % 15 == 0)&&(!intogate)) {   //set gate
       if (!set_lock) {
         for (int i=1; i<31; i++) {
         for (int j=1; j<31; j++) {
@@ -239,10 +243,7 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    if (intogate !=0){ //if snake is going through a gate 
-      gate_time--;
-      intogate--;
-    }
+    
 
     snake1.push_front(Snake(headX,headY));  //new head (moving forward)
     
