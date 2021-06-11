@@ -5,14 +5,11 @@ int main(int argc, char *argv[]) {
   initscr();
   noecho();
   curs_set(0);
-
   start_color();
   init_pair(16,16,16);
   init_pair(100,18,18);
-
   init_pair(33,226,226); //yellow
   init_pair(44,202,202); //orange
-
   wbkgd(stdscr, COLOR_PAIR(16));
   Board b1;
   WINDOW *win = newwin(30,90,0,64);
@@ -41,13 +38,20 @@ int main(int argc, char *argv[]) {
   keypad(stdscr, TRUE);
   time_t start_time;  
   start_time = time(NULL);
-  time_t gate_time;
-  gate_time = time(NULL);
+  while(!start_time % 5 == 0) {
+    start_time++;
+    if (start_time % 5 == 0) {
+      break;
+    }
+  }
   int gate_cnt = 0;
+  bool changeBoard_1 = true;
+  bool changeBoard_2 = true;
+  bool changeBoard_3 = true;
   int intogate = 0;//for displaying gate while going into the gate
-  
   //speed for each stage
   int speedArr[] = {300,220,140,100};
+  int speedIndex = 0;
   time_t control_time;
   int temp_time = 0;
   bool set_lock = false;
@@ -60,7 +64,7 @@ int main(int argc, char *argv[]) {
       set_lock = false;
     }
     temp_time = control_time; 
-    usleep(speedArr[0]*1000);
+    usleep(speedArr[speedIndex]*1000);
     if(kbhit()) {  //if(kbhit) start
       ch = getch();
       switch(ch) {
@@ -99,7 +103,7 @@ int main(int argc, char *argv[]) {
     ////////////////////////////////////
     //INTO GATE
     if (b1.boardList[headX][headY*2]==7){ 
-      gate_time--;
+      gate_cnt++;
       intogate = snake1.size();
       int anotherX, anotherY;
       if (headX == b1.gateX1 && headY == b1.gateY1){
@@ -232,7 +236,7 @@ int main(int argc, char *argv[]) {
       intogate--;
     }
 
-    if (((control_time - start_time) % 15 == 0)&&(!intogate)) {   //set gate
+    if (((control_time - start_time) % 15 == 0)&&(!intogate)&&(control_time-start_time>=20)) {   //set gate
       if (!set_lock) {
         for (int i=1; i<31; i++) {
         for (int j=1; j<31; j++) {
@@ -268,10 +272,68 @@ int main(int argc, char *argv[]) {
     if (snake1.size() == 2){ //when snake size < 3 
       flag = true;
     }
-
-    if (snake1.size() == 4) {   //change stage
-      b1.changeBoard(b1.stage_3);
+    if (snake1.size() == 5 && changeBoard_1) {   //change stage
+      b1.changeBoard(b1.stage_1);
+      changeBoard_1 = false;
+      speedIndex = 1;
+      gate_cnt = 0;
+      int tempSize_1 = snake1.size();
+      for (int i=0; i<tempSize_1; i++) {
+        snake1.pop_back();
+      }
+      for (int i=0; i<tempSize_1; i++) {
+        snake1.push_back(Snake(15,15+i));
+      }
+      dir = 1;
+      while(!start_time % 5 == 0) {
+        start_time++;
+        if (start_time % 5 == 0) {
+          break;
+        }
+      }
     }
+    
+    if (snake1.size() >= 7 && gate_cnt>=1 && changeBoard_2) {
+      b1.changeBoard(b1.stage_2);
+      changeBoard_2 = false;
+      speedIndex = 2;
+      gate_cnt = 0;
+      int tempSize_2 = snake1.size();
+      for (int i=0; i<tempSize_2; i++) {
+        snake1.pop_back();
+      }
+      for (int i=0; i<tempSize_2; i++) {
+        snake1.push_back(Snake(19,14+i));
+      }
+      dir = 1;
+      while(!start_time % 5 == 0) {
+        start_time++;
+        if (start_time % 5 == 0) {
+          break;
+        }
+      }
+    }
+    if (snake1.size() >= 9 && gate_cnt>=2 && changeBoard_3) {
+      b1.changeBoard(b1.stage_3);
+      changeBoard_3 = false;
+      speedIndex = 3;
+      gate_cnt = -1000;
+      int tempSize_3 = snake1.size();
+      for (int i=0; i<tempSize_3; i++) {
+        snake1.pop_back();
+      }
+      for (int i=0; i<tempSize_3; i++) {
+        snake1.push_back(Snake(22,12+i));
+      }
+      dir = 1;
+      while(!start_time % 5 == 0) {
+        start_time++;
+        if (start_time % 5 == 0) {
+          break;
+        }
+      }
+    }
+
     //draw snake1 on the board
     for (it = snake1.begin(); it !=snake1.end(); it++) { 
       

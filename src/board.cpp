@@ -24,6 +24,36 @@ int main() {
             }
         }
     }
+    for (int i=0; i<9; i++) {
+        board[16][24+(i*2)] = 1;
+    }
+    for (int i=0; i<9; i++) {
+        board[12+i][32] = 1;
+    }
+    for (int i=0; i<10; i++) {
+        board[4][8+(i*2)] =1;
+    }
+    for (int i=0; i<10; i++) {
+        board[4][54-(i*2)] =1;
+    }
+    for (int i=0; i<10; i++) {
+        board[27][8+(i*2)] =1;
+    }
+    for (int i=0; i<10; i++) {
+        board[27][54-(i*2)] =1;
+    }
+    for (int i=0; i<8; i++) {
+        board[5+i][8] = 1;
+    }
+    for (int i=0; i<8; i++) {
+        board[5+i][54] = 1;
+    }
+    for (int i=0; i<8; i++) {
+        board[26-i][8] = 1;
+    }
+    for (int i=0; i<8; i++) {
+        board[26-i][54] = 1;
+    }
     for (int i=0; i<32; i++) {
         for (int j=0; j<64; j++) {
             cout << board[i][j];
