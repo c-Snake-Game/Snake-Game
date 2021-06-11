@@ -6,9 +6,6 @@ int main(int argc, char *argv[]) {
   noecho();
   curs_set(0);
 
-  //speed for each stage
-  int speed1 =300;  
-
   start_color();
   init_pair(16,16,16);
   init_pair(100,18,18);
@@ -42,17 +39,28 @@ int main(int argc, char *argv[]) {
   }
   b1.printBoard();
   keypad(stdscr, TRUE);
-
-  time_t item_time;
-  item_time = time(NULL);
+  time_t start_time;  
+  start_time = time(NULL);
   time_t gate_time;
   gate_time = time(NULL);
-  int item_cnt = 0;
   int gate_cnt = 0;
   int intogate = 0;//for displaying gate while going into the gate
   
+  //speed for each stage
+  int speedArr[] = {300,220,140,100};
+  time_t control_time;
+  int temp_time = 0;
+  bool set_lock = false;
   while(!flag) {   //while start
-    usleep(speed1*1000);
+    control_time = time(NULL);
+    if (control_time == temp_time) {
+      set_lock = true;
+    }
+    else {
+      set_lock = false;
+    }
+    temp_time = control_time; 
+    usleep(speedArr[2]*1000);
     if(kbhit()) {  //if(kbhit) start
       ch = getch();
       switch(ch) {
@@ -80,8 +88,6 @@ int main(int argc, char *argv[]) {
     else if (dir == 2) headY++;
     else if (dir == 3) headX++;
     else if (dir == 4) headX--;
-    
-    
 
     if (b1.boardList[headX][headY*2] == 1){  //collision wall
       flag = true;
@@ -208,39 +214,29 @@ int main(int argc, char *argv[]) {
 
     }
     /////////////////////////////////
-    if (item_time % 16 == 0) {   //set item
-      item_time++;
-      for (int i=2; i<30; i++) {
+    if (((control_time - start_time) % 5 == 0)) {   //set item
+      if (!set_lock) {
+        for (int i=2; i<30; i++) {
         for (int j=2; j<30; j++) {
           if (b1.itemList[i][j*2] == 5 || b1.itemList[i][j*2] == 6) {
             b1.itemList[i][j*2] = 0;
             b1.boardList[i][j*2] = 0;
           }
+          }
         }
+        b1.setItem();
       }
-      b1.setItem();
     }
 
-    if (gate_time % 15 == 0) {   //set gate
-      gate_time++;
-      for (int i=1; i<31; i++) {
+    if (((control_time - start_time) % 15 == 0)) {   //set gate
+      if (!set_lock) {
+        for (int i=1; i<31; i++) {
         for (int j=1; j<31; j++) {
           if (b1.boardList[i][j*2] == 7) b1.boardList[i][j*2] = 1;
+          }
         }
+        b1.setGate();
       }
-      b1.setGate();
-    }
-
-    item_cnt++;  //item이 2개씩 떨어지는거 방지
-    if (item_cnt == 2) {
-      item_cnt = 0;
-      item_time++;
-    }
-
-    gate_cnt++;  //gate가 4개씩 생기는거 방지
-    if (gate_cnt == 2) {
-      gate_cnt = 0;
-      gate_time++;
     }
 
     if (intogate !=0){ //if snake is going through a gate 
