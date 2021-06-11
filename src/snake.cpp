@@ -144,6 +144,7 @@ void Board::printBoard(){
     init_pair(5, COLOR_GREEN, COLOR_GREEN);  // 5 Growh item green
     init_pair(6, COLOR_RED, COLOR_RED);  // 6 Poison item red
     init_pair(7, 90, 90);  // 7 gate purple
+    init_pair(8, 50, 50);  // 8 special
     for (int x=0; x<32; x++) {
         for (int y=0; y<64; y++) {
             if(y % 2 == 0) {
@@ -187,6 +188,11 @@ void Board::printBoard(){
                     mvprintw(x,y,"aa");
                     attroff(COLOR_PAIR(6));
                 }
+                if (itemList[x][y] == 8) {
+                    attron(COLOR_PAIR(8));
+                    mvprintw(x,y,"aa");
+                    attroff(COLOR_PAIR(8));
+                }
             }
         }
     }
@@ -226,7 +232,34 @@ void Board::setItem() {
         itemList[x][y*2] = 6;   // Poison Item
     }
 }
+void Board::setSpecial() {
+    pair<int,int> xy;
+    list<pair<int,int>> pairList;
+    for (int i=2; i<29; i++) {
+        for (int j=2; j<29; j++) {
+                if ( boardList[i][j*2] == 0 && (itemList[i][j*2] != 5 && itemList[i][j] != 6)) {
+                    xy.first = i;
+                    xy.second = j;
+                    pairList.push_back(xy);
+                }
+        }
+    }
+    int size = pairList.size();
 
+    uniform_int_distribution<int> dis(0,size-1);
+    int ranNum = dis(gen);
+    int x = 0;
+    int y = 0;
+    for ( int i=0; i<ranNum; i++ ) {
+        xy = pairList.front();
+        pairList.pop_front();
+        pairList.push_back(xy);    
+    }
+    xy = pairList.front();
+    x = xy.first;
+    y = xy.second;
+    itemList[x][y*2] = 8;   // Special Item
+}
 void Board::setGate() {
     // x = 1~30  y*2 = 2 ~ 29
     int x1;

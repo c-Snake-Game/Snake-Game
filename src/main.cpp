@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
   wbkgd(win,COLOR_PAIR(100));
 
   bool flag = false;
+  bool flag_special = false;
   int dir = 1;   //right
   int ch;
   list<Snake> snake1;
@@ -246,6 +247,21 @@ int main(int argc, char *argv[]) {
         b1.setGate();
       }
     }
+    if (flag_special) {
+      if (((control_time - start_time) % 3 == 0)) {   //set item
+        if (!set_lock && snake1.size()>=11) {
+          for (int i=2; i<30; i++) {
+          for (int j=2; j<30; j++) {
+            if (b1.itemList[i][j*2] == 8) {
+              b1.itemList[i][j*2] = 0;
+              b1.boardList[i][j*2] = 0;
+            }
+            }
+          }
+          b1.setSpecial();
+        }
+      }
+    }
 
     
 
@@ -316,6 +332,7 @@ int main(int argc, char *argv[]) {
     if (snake1.size() >= 9 && gate_cnt>=2 && changeBoard_3) {
       b1.changeBoard(b1.stage_3);
       changeBoard_3 = false;
+      flag_special = true;
       speedIndex = 3;
       gate_cnt = -1000;
       int tempSize_3 = snake1.size();

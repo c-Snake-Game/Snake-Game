@@ -24,6 +24,7 @@ class Board{
         int stage_3[32][64];
         void printBoard();
         void setItem();
+        void setSpecial();
         void setGate();
         void changeBoard(int arr[32][64]);
         int gateX1,gateY1;
