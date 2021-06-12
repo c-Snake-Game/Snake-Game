@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
   init_pair(26,COLOR_GREEN,16);//green
   init_pair(27,COLOR_RED,16);//purple
   init_pair(28,11,16);//light yellow
+  init_pair(29,50,16);//special
   
   wbkgd(stdscr, COLOR_PAIR(16));
   Board b1;
@@ -148,7 +149,7 @@ int main(int argc, char *argv[]) {
         if (dir == 1){ //original dir = left
           headX = anotherX;
           headY = anotherY - 1;
-          if (b1.boardList[anotherX][(anotherY-1)*2]==1){ //when blocked by wall
+          if ((b1.boardList[anotherX][(anotherY-1)*2]==1)||(b1.boardList[anotherX][(anotherY-1)*2]==2)){ //when blocked by wall
             dir = 4; //up
             headX = anotherX -1;
             headY = anotherY;
@@ -167,7 +168,7 @@ int main(int argc, char *argv[]) {
         else if (dir == 2) { //original dir =right
           headX = anotherX;
           headY = anotherY + 1;
-          if (b1.boardList[anotherX][(anotherY+1)*2]==1){ //when blocked by wall
+          if ((b1.boardList[anotherX][(anotherY+1)*2]==1)||(b1.boardList[anotherX][(anotherY+1)*2]==2)){ //when blocked by wall
             dir = 3; //down
             headX = anotherX + 1;
             headY = anotherY;
@@ -186,7 +187,7 @@ int main(int argc, char *argv[]) {
         else if (dir == 3) { //original dir = down
           headX = anotherX + 1; 
           headY = anotherY;
-          if (b1.boardList[anotherX + 1][(anotherY)*2]==1){ //when blocked by wall
+          if ((b1.boardList[anotherX + 1][(anotherY)*2]==1)||(b1.boardList[anotherX + 1][(anotherY)*2]==2)){ //when blocked by wall
             dir = 1; //left
             headX = anotherX;
             headY = anotherY-1;
@@ -205,7 +206,7 @@ int main(int argc, char *argv[]) {
         else if (dir == 4) { //original dir =up
           headX = anotherX-1;
           headY = anotherY;
-          if (b1.boardList[anotherX-1][(anotherY)*2]==1){ //when blocked by wall
+          if ((b1.boardList[anotherX-1][(anotherY)*2]==1)||(b1.boardList[anotherX-1][(anotherY)*2]==2)){ //when blocked by wall
             dir = 2; //right
             headX = anotherX;
             headY = anotherY+1;
@@ -258,7 +259,7 @@ int main(int argc, char *argv[]) {
     }
     if (flag_special) {
       if (((control_time - start_time) % 3 == 0)) {   //set item
-        if (!set_lock && snake1.size()>=11) {
+        if (!set_lock && snake1.size()>=9) {
           for (int i=2; i<30; i++) {
           for (int j=2; j<30; j++) {
             if (b1.itemList[i][j*2] == 8) {
@@ -390,9 +391,9 @@ int main(int argc, char *argv[]) {
       mvprintw(3,68,"*******LAST STAGE*******");
       mvprintw(6,69,"   **YOUR MISSION**   ");
       attroff(COLOR_PAIR(21));
-      attron(COLOR_PAIR(8));
-      mvprintw(8,70,"-GET THE SPECIAL ITEM ");
-      attroff(COLOR_PAIR(8));
+      attron(COLOR_PAIR(29));
+      mvprintw(8,70,"-EAT SPECIAL ITEM ");
+      attroff(COLOR_PAIR(29));
     }
     else if (!changeBoard_2){
       attron(COLOR_PAIR(21));

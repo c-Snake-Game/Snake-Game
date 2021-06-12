@@ -343,12 +343,18 @@ void Board::printPlay(){
     attron(COLOR_PAIR(27));
     mvprintw(21,73," -> Poison Item   ");
     attroff(COLOR_PAIR(27));
+    attron(COLOR_PAIR(7));
+    mvprintw(22,70,"aa");
+    attroff(COLOR_PAIR(7));
+    attron(COLOR_PAIR(23));
+    mvprintw(22,73," -> Gate   ");
+    attroff(COLOR_PAIR(23));
 
     attron(COLOR_PAIR(28));
-    mvprintw(23,70," moving key :");
-    mvprintw(24,70,"      ___");
-    mvprintw(25,70,"  ___|_w_|___");
-    mvprintw(26,70," |_a_|_s_|_d_|");
+    mvprintw(24,70," moving key :");
+    mvprintw(25,70,"      ___");
+    mvprintw(26,70,"  ___|_w_|___");
+    mvprintw(27,70," |_a_|_s_|_d_|");
     attroff(COLOR_PAIR(28));
     
 }
