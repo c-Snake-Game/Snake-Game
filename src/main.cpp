@@ -346,7 +346,7 @@ int main(int argc, char *argv[]) {
       changeBoard_3 = false;
       flag_special = true;
       speedIndex = 3;
-      gate_cnt = -1000;
+      gate_cnt = 0;
       int tempSize_3 = snake1.size();
       for (int i=0; i<tempSize_3; i++) {
         snake1.pop_back();
@@ -400,7 +400,7 @@ int main(int argc, char *argv[]) {
       mvprintw(6,69,"   **YOUR MISSION**   ");
       attroff(COLOR_PAIR(21));
       attron(COLOR_PAIR(22));
-      mvprintw(8,70,"-Snake length > 9     ");
+      mvprintw(8,70,"-Snake length > 8     ");
       attroff(COLOR_PAIR(22));
       attron(COLOR_PAIR(23));
       mvprintw(9,70,"-Passing gate 2 times ");
@@ -412,7 +412,7 @@ int main(int argc, char *argv[]) {
       mvprintw(6,69,"   **YOUR MISSION**   ");
       attroff(COLOR_PAIR(21));
       attron(COLOR_PAIR(22));
-      mvprintw(8,70,"-Snake length > 7     ");
+      mvprintw(8,70,"-Snake length > 6     ");
       attroff(COLOR_PAIR(22));
       attron(COLOR_PAIR(23));
       mvprintw(9,70,"-Passing gate 1 time  ");
@@ -424,7 +424,7 @@ int main(int argc, char *argv[]) {
       mvprintw(6,69,"   **YOUR MISSION**   ");
       attroff(COLOR_PAIR(21));
       attron(COLOR_PAIR(22));
-      mvprintw(8,70,"-Snake length > 5     ");
+      mvprintw(8,70,"-Snake length > 4     ");
       attroff(COLOR_PAIR(22));
     }
     attron(COLOR_PAIR(24));
