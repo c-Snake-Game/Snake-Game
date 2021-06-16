@@ -28,6 +28,8 @@ int main(int argc, char *argv[]) {
   list<Snake> snake1;
   list<Snake>::iterator it;
   int success = false;
+  int growth_cnt =0;
+  int poison_cnt =0;
   //initialize snake length:3
   for (int i = 0; i < 3; i++) {
     snake1.push_back(Snake(15,15+i));
@@ -242,7 +244,7 @@ int main(int argc, char *argv[]) {
 
     if (intogate !=0){ //if snake is going through a gate 
       intogate--;
-      if (intogate == 1){
+      if (intogate == 0){
         gate_cnt++;
       }
     }
@@ -283,6 +285,7 @@ int main(int argc, char *argv[]) {
     }
     
     if (b1.itemList[headX][headY*2] == 6) { //eating poison item
+      poison_cnt++;
       b1.itemList[headX][headY*2] = 0;
       b1.boardList[(snake1.back()).getX()][(snake1.back()).getY()*2] = 0; //erase last tail*2
       snake1.pop_back();
@@ -290,6 +293,7 @@ int main(int argc, char *argv[]) {
       snake1.pop_back();
     }
     else if (b1.itemList[headX][headY*2] == 5) { //eating growth item
+      growth_cnt++;
       b1.itemList[headX][headY*2] = 0;
     }
     else{  //default moving
@@ -306,6 +310,8 @@ int main(int argc, char *argv[]) {
       changeBoard_1 = false;
       speedIndex = 1;
       gate_cnt = 0;
+      growth_cnt=0;
+      poison_cnt=0;
       int tempSize_1 = snake1.size();
       for (int i=0; i<tempSize_1; i++) {
         snake1.pop_back();
@@ -322,11 +328,13 @@ int main(int argc, char *argv[]) {
       }
     }
     
-    if (snake1.size() >= 7 && gate_cnt>=1 && changeBoard_2) {
+    if (snake1.size() >= 7 && gate_cnt>=1 && changeBoard_2 && poison_cnt>=1 && growth_cnt>=3) {
       b1.changeBoard(b1.stage_2);
       changeBoard_2 = false;
       speedIndex = 2;
       gate_cnt = 0;
+      growth_cnt=0;
+      poison_cnt=0;
       int tempSize_2 = snake1.size();
       for (int i=0; i<tempSize_2; i++) {
         snake1.pop_back();
@@ -342,12 +350,14 @@ int main(int argc, char *argv[]) {
         }
       }
     }
-    if (snake1.size() >= 9 && gate_cnt>=2 && changeBoard_3) {
+    if (snake1.size() >= 9 && gate_cnt>=2 && changeBoard_3 && poison_cnt>=2 && growth_cnt>=4) {
       b1.changeBoard(b1.stage_3);
       changeBoard_3 = false;
       flag_special = true;
       speedIndex = 3;
       gate_cnt = 0;
+      growth_cnt=0;
+      poison_cnt=0;
       int tempSize_3 = snake1.size();
       for (int i=0; i<tempSize_3; i++) {
         snake1.pop_back();
@@ -398,41 +408,64 @@ int main(int argc, char *argv[]) {
     else if (!changeBoard_2){
       attron(COLOR_PAIR(21));
       mvprintw(3,68,"*******3rd  STAGE*******");
-      mvprintw(6,69,"   **YOUR MISSION**   ");
+      mvprintw(4,69,"   **YOUR MISSION**   ");
       attroff(COLOR_PAIR(21));
       attron(COLOR_PAIR(22));
-      mvprintw(8,70,"-Snake length > 8     ");
+      mvprintw(6,70,"-Snake length > 8     ");
+      if (snake1.size()>8) mvprintw(6,90,"o");
       attroff(COLOR_PAIR(22));
+      attron(COLOR_PAIR(26));
+      mvprintw(7,70,"-Eat 4 Growth items   ");
+      if (growth_cnt>=4) mvprintw(7,90,"o");
+      attroff(COLOR_PAIR(26));
+      attron(COLOR_PAIR(27));
+      mvprintw(8,70,"-Eat 2 Poison item   ");
+      if (poison_cnt>=2) mvprintw(8,90,"o");
+      attroff(COLOR_PAIR(27));
       attron(COLOR_PAIR(23));
       mvprintw(9,70,"-Passing gate 2 times ");
+      if (gate_cnt>=2) mvprintw(9,90,"o");
       attroff(COLOR_PAIR(23));
     }
     else if(!changeBoard_1){
       attron(COLOR_PAIR(21));
       mvprintw(3,68,"*******2nd  STAGE*******");
-      mvprintw(6,69,"   **YOUR MISSION**   ");
+      mvprintw(4,69,"   **YOUR MISSION**   ");
       attroff(COLOR_PAIR(21));
       attron(COLOR_PAIR(22));
-      mvprintw(8,70,"-Snake length > 6     ");
+      mvprintw(6,70,"-Snake length > 6     ");
+      if (snake1.size()>6) mvprintw(6,90,"o");
       attroff(COLOR_PAIR(22));
+      attron(COLOR_PAIR(26));
+      mvprintw(7,70,"-Eat 3 Growth items   ");
+      if (growth_cnt>=3) mvprintw(7,90,"o");
+      attroff(COLOR_PAIR(26));
+      attron(COLOR_PAIR(27));
+      mvprintw(8,70,"-Eat 1 Poison item   ");
+      if (poison_cnt>=1) mvprintw(8,90,"o");
+      attroff(COLOR_PAIR(27));
       attron(COLOR_PAIR(23));
       mvprintw(9,70,"-Passing gate 1 time  ");
+      if (gate_cnt>=1) mvprintw(9,90,"o");
       attroff(COLOR_PAIR(23));
     }
     else {
       attron(COLOR_PAIR(21));
       mvprintw(3,68,"*******1st  STAGE*******");
-      mvprintw(6,69,"   **YOUR MISSION**   ");
+      mvprintw(4,69,"   **YOUR MISSION**   ");
       attroff(COLOR_PAIR(21));
       attron(COLOR_PAIR(22));
-      mvprintw(8,70,"-Snake length > 4     ");
+      mvprintw(6,70,"-Snake length : 5     ");
+      if (snake1.size()>=5) mvprintw(6,90,"o");
       attroff(COLOR_PAIR(22));
     }
     attron(COLOR_PAIR(24));
     mvprintw(13,70," Current length: %d   ", snake1.size());
+    mvprintw(14,70," Growth item: %d   ", growth_cnt);
+    mvprintw(15,70," Poison item: %d   ", poison_cnt);
     attroff(COLOR_PAIR(24));
     attron(COLOR_PAIR(25));
-    mvprintw(14,70," Passed gate   : %d   ", gate_cnt);
+    mvprintw(16,70," Passed gate   : %d   ", gate_cnt);
     attroff(COLOR_PAIR(25));
     b1.printPlay();
     refresh();
