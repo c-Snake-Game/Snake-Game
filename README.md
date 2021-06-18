@@ -6,3 +6,6 @@ Snake Game
 김우림 @KRimwoo
 
 하정현 @kmuHjh
+
+실행방법 : build 폴더 위치에서 터미널을 실행합니다.
+        : ./ex00를 입력 후 엔터 -> 게임 실행
